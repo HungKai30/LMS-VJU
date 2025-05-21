@@ -1,10 +1,9 @@
-import { DashboardHome } from '@/components/DashboardHome'
-import { DashboardNavbar } from '@/components/DashboardNavbar'
-import { Book, Calendar, Clipboard, Cog, CogIcon, Component, GraduationCapIcon, Home } from 'lucide-react'
-import Link from 'next/link'
 import React from 'react'
-
-export default function Dashboard() {
+import { DashboardNavbar } from '@/components/DashboardNavbar'
+import Link from 'next/link'
+import { Book, Calendar, Clipboard, Cog, CogIcon, Component, GraduationCapIcon, Home } from 'lucide-react'
+import StaffTable from '@/components/StaffTable'
+export default function StaffDashboard() {
     return (
         <div className="min-h-screen flex flex-col bg-base-100">
             <div className="w-full">
@@ -102,7 +101,8 @@ export default function Dashboard() {
                     </div>
                 </div>
                 <div className="w-4/5 overflow-y-auto h-[calc(100vh-64px)]">
-                    <DashboardHome />
+                    <h1 className="text-4xl font-bold p-6">Staff List</h1>
+                    <StaffTable />
                 </div>
             </div>
         </div>
