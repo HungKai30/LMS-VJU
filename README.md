@@ -3,7 +3,7 @@ This is a Simple Student Management System Developed for Educational Purpose usi
 We're building this project as part of final exam
 And if you like this project then ADD a STAR ⭐️  to this project 👆
 
-## Features of this Project
+## MAIN FUNCTION OF THIS PROJECT
 
 ### A. Admin Users Can
 1. See Overall Summary Charts of Stuudents Performance, Staffs Perfomrances, Courses, Subjects, Leave, etc.
@@ -29,20 +29,6 @@ And if you like this project then ADD a STAR ⭐️  to this project 👆
 3. View Result
 4. Apply for Leave
 5. Send Feedback to HOD
-
-
-## Support Developer
-1. Subscribe & Share my YouTube Channel - https://bit.ly/vijay-thapa-online-courses
-2. Add a Star 🌟  to this 👆 Repository
-
-
-## Donate
-
-**[PayPal](https://bit.ly/support-vijay-thapa)**
-
-**[Buy me a Coffee  ☕️](https://www.buymeacoffee.com/vijaythapa)**
-
-**Donate by wire transfer:** E-Mail at *donate@vijaythapa.com* for wire transfer details. 
 
 
 ## How to Install and Run this project?
@@ -94,7 +80,7 @@ $  source venv/bin/activate
 
 **3. Clone this project**
 ```
-$  git clone https://github.com/vijaythapa333/django-student-management-system.git
+$  git clone https://github.com/HungKai30/LMS-VJU
 ```
 
 Then, Enter the project
@@ -154,6 +140,8 @@ Password: student
 
 
 ## For Sponsor or Projects Enquiry
-1. Email - hi@vijaythapa.com
-2. LinkedIn - [vijaythapa](https://www.linkedin.com/in/vijaythapa "Vijay Thapa on LinkedIn")
-
+1. Nguyen Canh Hung
+2. Nguyen Huu Giap
+3. Tran Thanh Tuan
+4. Duong Minh Vu
+5. Hoang Duc Viet
