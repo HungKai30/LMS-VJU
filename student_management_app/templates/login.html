@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %} 
+
+{% block content %}
+<style>
+  body.login-page {
+    background-color: #0D0D0D !important; /* Rich black background */
+  }
+  
+  .login-box .card {
+    border: 2px solid white !important; /* White border for the form */
+  }
+  
+  .card-body.login-card-body {
+    background-color: #E0E0E0 !important; /* Gray background for the card */
+  }
+  
+  /* Text color adjustments */
+  .login-logo a {
+    color: white !important; /* White text for the logo on dark background */
+    text-shadow: 0 0 3px rgba(255,255,255,0.5); /* Subtle glow effect */
+  }
+  
+  .login-box-msg {
+    color: #333 !important; /* Darker text for better readability on gray */
+    font-weight: 500; /* Slightly bolder */
+  }
+  
+  .btn-primary {
+    background-color: #2c3e50 !important; /* Darker blue button */
+    border-color: #2c3e50 !important;
+  }
+</style>
+    <body class="hold-transition login-page">
+<div class="login-box">
+  <div class="login-logo">
+    <a href="{% url 'login' %}"><b>USPACE</a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="card">
+    <div class="card-body login-card-body">
+      <p class="login-box-msg">Sign in to Student Management System</p>
+
+      <form action="{% url 'doLogin' %}" method="POST">
+      {% csrf_token %}
+        <div class="input-group mb-3">
+          <input type="email" class="form-control" placeholder="Email" name="email">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input type="password" class="form-control" placeholder="Password" name="password">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+          </div>
+
+          {% comment %} <div class="col-12 text-center">
+            <a href="{% url 'password_reset' %}">Reset Password</a>
+          </div>  {% endcomment %}
+
+          {% comment %} Display Messages {% endcomment %}
+          {% if messages %}
+          <div class="col-12">
+            {% for message in messages %}
+              {% if message.tags == "error" %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                  {{ message }}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <!-- /.col -->
+        </div>
+      </form>
+
+
+  </div>
+</div>
+<!-- /.login-box -->
+
+{% endblock %}

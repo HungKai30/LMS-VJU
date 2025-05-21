@@ -1,0 +1,203 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block page_title %}
+    Add Staff
+{% endblock page_title %}
+
+{% block custom_css %}
+<style>
+  /* Dark theme with cream text */
+  .content-wrapper {
+    background-color: #2D2D2D !important;
+    color: #F5F5DC !important;
+  }
+  
+  .card {
+    background-color: #383838 !important;
+    border: 1px solid #444;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  }
+  
+  .card-primary .card-header, 
+  .card-success .card-header {
+    background-color: #212529 !important;
+    border-bottom: 1px solid #444;
+  }
+  
+  .card-title {
+    color: #F5F5DC !important;
+    font-weight: 600;
+  }
+  
+  /* Form styling */
+  .form-control {
+    background-color: #454545;
+    border: 1px solid #555;
+    color: #F5F5DC !important;
+  }
+  
+  .form-control:focus {
+    background-color: #505050;
+    border-color: #666;
+    box-shadow: 0 0 0 0.2rem rgba(130, 138, 145, 0.25);
+  }
+  
+  textarea.form-control {
+    background-color: #454545;
+    color: #F5F5DC !important;
+  }
+  
+  label {
+    color: #F5F5DC !important;
+    font-weight: 500;
+  }
+  
+  /* Button styling */
+  .btn-primary {
+    background-color: #375a7f !important;
+    border-color: #375a7f !important;
+  }
+  
+  .btn-primary:hover {
+    background-color: #2b4764 !important;
+    border-color: #2b4764 !important;
+  }
+  
+  /* Alert styling */
+  .alert-success {
+    background-color: rgba(40, 167, 69, 0.8) !important;
+    border-color: rgba(40, 167, 69, 0.9) !important;
+  }
+  
+  .alert-danger {
+    background-color: rgba(220, 53, 69, 0.8) !important;
+    border-color: rgba(220, 53, 69, 0.9) !important;
+  }
+  
+  /* Card footer styling */
+  .card-footer {
+    background-color: #333333 !important;
+    border-top: 1px solid #444;
+  }
+  
+  /* Close button in alerts */
+  .close {
+    color: #F5F5DC;
+    opacity: 0.8;
+  }
+  
+  .close:hover {
+    color: #ffffff;
+    opacity: 1;
+  }
+  
+  /* AJAX validation messages styling */
+  .email_error, .username_error {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.9rem;
+  }
+</style>
+{% endblock custom_css %}
+
+{% block main_content %}
+<section class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Add Student</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    {% url 'add_student_save' as action_path %}
+                    {% include 'hod_template/form_template.html' with messages=messages form=form action_path=action_path button_text="Add Student" %}
+
+                    </div>
+                    <!-- /.card -->
+
+                </div>
+            </div>
+
+        </div><!-- /.container-fluid -->
+      </section>
+
+  {% endblock main_content %}
+
+  {% block custom_js %}
+    {% comment %} Checking if email and username already exists or not usin Ajax {% endcomment %}
+
+    <script>
+        $(document).ready(function(){
+            // keyup event will be triggered when user leaves keyboard
+            $("#id_email").keyup(function(){
+                var email = $(this).val();
+
+                if(email!=""){
+                    $.ajax({
+                        url : "{% url 'check_email_exist' %}",
+                        type : 'POST',
+                        data : {email:email}
+                    })
+                    .done(function(response){
+                        //console.log(response);
+
+                        if(response == "True"){
+                            $(".email_error").remove();
+                            $("<span class='email_error' style='color: #ff7070; padding: 5px; font-weight: bold;'> Email Not Available. </span>").insertAfter("#id_email")
+                        }
+                        else{
+                            $(".email_error").remove();
+                            $("<span class='email_error' style='color: #70ff70; padding: 5px; font-weight: bold;'> Email Available. </span>").insertAfter("#id_email")
+                        }
+                    })
+
+                    .fail(function(){
+                        console.log("Failed");
+                    })
+                }
+                else{
+                    $(".email_error").remove();
+                }
+                
+            })
+
+            $("#id_username").keyup(function(){
+                var username = $(this).val();
+                
+                if(username!=""){
+                    $.ajax({
+                        url : "{% url 'check_username_exist' %}",
+                        type : 'POST',
+                        data : {username:username}
+                    })
+                    .done(function(response){
+                        //console.log(response);
+
+                        if(response == "True"){
+                            $(".username_error").remove();
+                            $("<span class='username_error' style='color: #ff7070; padding: 5px; font-weight: bold;'> Username Not Available. </span>").insertAfter("#id_username")
+                        }
+                        else{
+                            $(".username_error").remove();
+                            $("<span class='username_error' style='color: #70ff70; padding: 5px; font-weight: bold;'> Username Available. </span>").insertAfter("#id_username")
+                        }
+                    })
+
+                    .fail(function(){
+                        console.log("Failed");
+                    })
+                }
+                else{
+                    $(".username_error").remove();
+                }
+                
+            })
+        })
+    </script>
+
+
+  {% endblock custom_js %}

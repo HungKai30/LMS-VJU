@@ -1,0 +1,42 @@
+<form role="form" method="POST" action="{{ action_path }}" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {% comment %} Display Messages {% endcomment %}
+    {% if messages %}
+  {% for message in messages %}
+    <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<form method="post" action="{{ action_path }}" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="card-body">
+    {% for field in form %}
+      <div class="form-group">
+        <label>{{ field.label }}</label>
+        {% if field.errors %}
+          {{ field }}
+          <div class="text-danger">
+            {{ field.errors }}
+          </div>
+        {% else %}
+          {% if field.field.widget.input_type == 'checkbox' %}
+            <div class="form-check">
+              {{ field }}
+            </div>
+          {% else %}
+            {{ field.as_widget|safe|cut:"class='form-control'" }}
+          {% endif %}
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+  <div class="card-footer">
+    <button type="submit" class="btn btn-primary">{{ button_text }}</button>
+  </div>
+</form>

@@ -1,0 +1,228 @@
+{% extends 'staff_template/base_template.html' %}
+
+{% block page_title %}
+    Leave Report and Apply for Leave
+{% endblock page_title %}
+
+{% block custom_css %}
+<style>
+  /* Dark theme with cream text */
+  .content-wrapper {
+    background-color: #2D2D2D !important;
+    color: #F5F5DC !important;
+  }
+  
+  .card {
+    background-color: #383838 !important;
+    border: 1px solid #444;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  }
+  
+  .card-primary .card-header, 
+  .card-success .card-header {
+    background-color: #212529 !important;
+    border-bottom: 1px solid #444;
+  }
+  
+  .card-title {
+    color: #F5F5DC !important;
+    font-weight: 600;
+  }
+  
+  /* Form styling */
+  .form-control {
+    background-color: #454545;
+    border: 1px solid #555;
+    color: #F5F5DC !important;
+  }
+  
+  .form-control:focus {
+    background-color: #505050;
+    border-color: #666;
+    box-shadow: 0 0 0 0.2rem rgba(130, 138, 145, 0.25);
+  }
+  
+  label {
+    color: #F5F5DC !important;
+    font-weight: 500;
+  }
+  
+  /* Button styling */
+  .btn-primary {
+    background-color: #375a7f !important;
+    border-color: #375a7f !important;
+  }
+  
+  .btn-primary:hover {
+    background-color: #2b4764 !important;
+    border-color: #2b4764 !important;
+  }
+  
+  /* Table styling */
+  .table {
+    color: #F5F5DC !important;
+  }
+  
+  .table .thead-light th {
+    background-color: #303030 !important;
+    color: #F5F5DC !important;
+    border-color: #444;
+  }
+  
+  .table td, .table th {
+    border-color: #444;
+  }
+  
+  /* Status indicators */
+  .table .alert {
+    padding: 5px 10px;
+    display: inline-block;
+    color: #212529;
+  }
+  
+  /* Improve alert visibility */
+  .alert-success {
+    background-color: rgba(40, 167, 69, 0.8) !important;
+    border-color: rgba(40, 167, 69, 0.9) !important;
+  }
+  
+  .alert-warning {
+    background-color: rgba(255, 193, 7, 0.8) !important;
+    border-color: rgba(255, 193, 7, 0.9) !important;
+  }
+  
+  .alert-danger {
+    background-color: rgba(220, 53, 69, 0.8) !important;
+    border-color: rgba(220, 53, 69, 0.9) !important;
+  }
+  
+  /* Add some spacing */
+  .row {
+    margin-bottom: 25px;
+  }
+</style>
+{% endblock custom_css %}
+
+{% block main_content %}
+{% load static %}
+
+<section class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Apply For Leave</h3>
+                    </div>
+                    <!-- /.card-header -->
+
+                                {% comment %} Display Messages {% endcomment %}
+                                {% if messages %}
+                                <div class="form-group">
+                                <div class="col-12">
+                                    {% for message in messages %}
+                                    {% if message.tags == "error" %}
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                    {% elif message.tags == "success" %}
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                                </div>
+                                {% endif %}
+                            
+                    <form method="POST" action="{% url 'staff_apply_leave_save' %}">
+                        {% csrf_token %}
+                        <div class="card-body">
+                           
+                            <div class="form-group">
+                                <label>Leave Date </label>
+                                <input type="date" name="leave_date" class="form-control" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Leave Reason </label>
+                                <textarea name="leave_message" class="form-control" rows="6" placeholder="Leave Messge"></textarea>
+                            </div>
+
+
+                        </div>
+                        <!-- /.card-body -->
+
+                        <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Apply for Leave</button>
+                        </div>
+
+                    </form>
+
+                    </div>
+                    <!-- /.card -->
+
+
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-success">
+                        <div class="card-header">
+                            <h3 class="card-title">Leave Apply History</h3>
+                        </div>
+
+                        <div class="card-body">
+                           <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="thead-light">
+                                    <tr>
+                                        <th>#ID</th>
+                                        <th>Leave Date</th>
+                                        <th>Leave Message</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    </thead>
+                                    
+                                    {% for leave in leave_data %}
+                                    <tr>
+                                        <td>{{ leave.id }}</td>
+                                        <td>{{ leave.leave_date }}</td>
+                                        <td>{{ leave.leave_message }}</td>
+                                        <td>
+                                            {% if leave.leave_status == 1 %}
+                                                <span class="alert alert-success">Approved</span>
+                                            {% elif leave.leave_status == 2 %}
+                                                <span class="alert alert-danger">Rejected</span>
+                                            {% else %}
+                                                <span class="alert alert-warning">Pending</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /.container-fluid -->
+      </section>
+
+  {% endblock main_content %}
+
+{% block custom_js %}
+
+{% endblock custom_js %}

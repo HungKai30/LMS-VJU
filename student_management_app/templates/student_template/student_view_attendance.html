@@ -1,0 +1,202 @@
+{% extends 'student_template/base_template.html' %}
+
+{% block page_title %}
+    View Attendance Data
+{% endblock page_title %}
+
+{% block custom_css %}
+<style>
+  /* Dark theme with cream text */
+  .content-wrapper {
+    background-color: #2D2D2D !important;
+    color: #F5F5DC !important;
+  }
+  
+  .card {
+    background-color: #383838 !important;
+    border: 1px solid #444;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  }
+  
+  .card-primary .card-header, 
+  .card-success .card-header {
+    background-color: #212529 !important;
+    border-bottom: 1px solid #444;
+  }
+  
+  .card-title {
+    color: #F5F5DC !important;
+    font-weight: 600;
+  }
+  
+  /* Form styling */
+  .form-control {
+    background-color: #454545;
+    border: 1px solid #555;
+    color: #F5F5DC !important;
+  }
+  
+  .form-control:focus {
+    background-color: #505050;
+    border-color: #666;
+    box-shadow: 0 0 0 0.2rem rgba(130, 138, 145, 0.25);
+  }
+  
+  select.form-control option {
+    background-color: #454545;
+    color: #F5F5DC;
+  }
+  
+  label {
+    color: #F5F5DC !important;
+    font-weight: 500;
+  }
+  
+  /* Button styling */
+  .btn-primary {
+    background-color: #375a7f !important;
+    border-color: #375a7f !important;
+  }
+  
+  .btn-primary:hover {
+    background-color: #2b4764 !important;
+    border-color: #2b4764 !important;
+  }
+  
+  /* Alert styling */
+  .alert-success {
+    background-color: rgba(40, 167, 69, 0.8) !important;
+    border-color: rgba(40, 167, 69, 0.9) !important;
+  }
+  
+  .alert-danger {
+    background-color: rgba(220, 53, 69, 0.8) !important;
+    border-color: rgba(220, 53, 69, 0.9) !important;
+  }
+  
+  /* Table styling for attendance data */
+  .table {
+    color: #F5F5DC !important;
+  }
+  
+  .table .thead-light th {
+    background-color: #303030 !important;
+    color: #F5F5DC !important;
+    border-color: #444;
+  }
+  
+  .table td, .table th {
+    border-color: #444;
+  }
+  
+  /* Dynamically added content styling */
+  #student_data {
+    background-color: #383838 !important;
+    color: #F5F5DC !important;
+  }
+  
+  /* Add some spacing */
+  .row {
+    margin-bottom: 25px;
+  }
+</style>
+{% endblock custom_css %}
+
+{% block main_content %}
+<section class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">View Attendance</h3>
+                    </div>
+                    <!-- /.card-header -->
+
+                                {% comment %} Display Messages {% endcomment %}
+                                {% if messages %}
+                                <div class="form-group">
+                                <div class="col-12">
+                                    {% for message in messages %}
+                                    {% if message.tags == "error" %}
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                    {% elif message.tags == "success" %}
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                                </div>
+                                {% endif %}
+                            
+                        <form method="POST" action="{% url 'student_view_attendance_post' %}">
+                        {% csrf_token %}
+
+                        <div class="card-body">
+                           
+                            <div class="form-group">
+                                <label>Subject </label>
+                                <select class="form-control" name="subject" id="subject">
+                                    {% for subject in subjects %}
+                                        <option value="{{ subject.id }}">{{ subject.subject_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Start Date </label>
+                                        <input type="date" class="form-control" name="start_date" />
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>End Date </label>
+                                        <input type="date" class="form-control" name="end_date" />
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+
+                        </div>
+                        <!-- /.card-body -->
+
+                        <div class="card-footer">
+                        <button type="submit" class="btn btn-primary" id="fetch_student">Fetch Attendance</button>
+                        </div>
+
+                        {% comment %} Displaying Students Here {% endcomment %}
+
+                        <div class="card-footer" id="student_data">
+                        </div> 
+
+                    </div>
+
+                    </form>
+                    <!-- /.card -->
+
+                </div>
+            </div>
+
+        </div><!-- /.container-fluid -->
+      </section>
+
+  {% endblock main_content %}
+
+{% block custom_js %}
+
+{% endblock custom_js %}

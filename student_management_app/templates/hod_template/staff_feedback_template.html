@@ -1,0 +1,266 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block page_title %}
+    Staff Feedback
+{% endblock page_title %}
+
+{% block custom_css %}
+<style>
+  /* Dark theme with white text */
+  .content-wrapper {
+    background-color: #2D2D2D !important;
+    color: #FFFFFF !important;
+  }
+  
+  .card {
+    background-color: #383838 !important;
+    border: 1px solid #444;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  }
+  
+  .card-primary .card-header, 
+  .card-success .card-header {
+    background-color: #212529 !important;
+    border-bottom: 1px solid #444;
+  }
+  
+  .card-title {
+    color: #FFFFFF !important;
+    font-weight: 600;
+  }
+  
+  /* Table styling */
+  .table {
+    color: #FFFFFF !important;
+  }
+  
+  .table thead th {
+    border-bottom: 2px solid #444;
+    background-color: #333333;
+  }
+  
+  .table td, .table th {
+    border-color: #444;
+  }
+  
+  /* Button styling */
+  .btn-primary {
+    background-color: #375a7f !important;
+    border-color: #375a7f !important;
+  }
+  
+  .btn-primary:hover {
+    background-color: #2b4764 !important;
+    border-color: #2b4764 !important;
+  }
+  
+  .btn-success {
+    background-color: #00bc8c !important;
+    border-color: #00bc8c !important;
+  }
+  
+  .btn-success:hover {
+    background-color: #009670 !important;
+    border-color: #009670 !important;
+  }
+  
+  /* Modal styling */
+  .modal-content {
+    background-color: #383838 !important;
+    border: 1px solid #444;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    color: #FFFFFF !important;
+  }
+  
+  .modal-header {
+    border-bottom: 1px solid #444 !important;
+    background-color: #212529 !important;
+  }
+  
+  .modal-footer {
+    border-top: 1px solid #444 !important;
+    background-color: #333333 !important;
+  }
+  
+  .close {
+    color: #FFFFFF !important;
+    opacity: 0.8;
+  }
+  
+  .close:hover {
+    color: #FFFFFF !important;
+    opacity: 1;
+  }
+  
+  /* Form styling */
+  .form-control {
+    background-color: #454545;
+    border: 1px solid #555;
+    color: #FFFFFF !important;
+  }
+  
+  .form-control:focus {
+    background-color: #505050;
+    border-color: #666;
+    box-shadow: 0 0 0 0.2rem rgba(130, 138, 145, 0.25);
+  }
+  
+  /* Alert styling */
+  .alert-success {
+    background-color: rgba(40, 167, 69, 0.8) !important;
+    border-color: rgba(40, 167, 69, 0.9) !important;
+    color: #FFFFFF !important;
+  }
+  
+  .alert-danger {
+    background-color: rgba(220, 53, 69, 0.8) !important;
+    border-color: rgba(220, 53, 69, 0.9) !important;
+    color: #FFFFFF !important;
+  }
+</style>
+{% endblock custom_css %}
+{% block main_content %}
+
+<section class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Staff Feedback</h3>
+                        </div>
+                        <!-- /.card-header -->
+
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Staff ID</th>
+                                    <th>Staff Name</th>
+                                    <th>Message</th>
+                                    <th>Sended On</th>
+                                    <th>Reply</th>
+                                </tr>
+                                </thead>
+
+                                {% for feedback in feedbacks %}
+                                <tbody>
+                                <tr>
+                                    <td>{{ feedback.id }}</td>
+                                    <td>{{ feedback.staff_id.admin.id }}</td>
+                                    <td>{{ feedback.staff_id.admin.first_name }} {{ feedback.staff_id.admin.last_name }}</td> 
+                                    <td>{{ feedback.feedback }}</td>
+                                    <td>{{ feedback.created_at }}</td>
+                                    <td>
+                                        {% if feedback.feedback_reply == "" %}
+                                            <button class="btn btn-success reply_open_modal" data-toggle="modal" data-target="#replyModal">Reply</button>
+                                        {% else %}
+                                            {{ feedback.feedback_reply }}
+                                        {% endif %}
+                                        
+                                    </td>
+                                </tr>
+                                </tbody>
+                                {% endfor %}
+
+                            </table>
+                        </div>
+                    
+                    </div>
+                    <!-- /.card -->
+
+                </div>
+            </div>
+
+        </div><!-- /.container-fluid -->
+      </section>
+
+      {% comment %} Modal to Reply Feedback {% endcomment %}
+      <!-- Modal -->
+        <div class="modal fade" id="replyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Reply Feedback</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Reply to: <b><span id="reply_name"></span></b></p>
+                <input type="hidden" id="reply_id" name="reply_id" />
+                <textarea class="form-control" rows="5" id="reply_message"></textarea>
+            </div>
+            <div class="modal-footer">
+                {% comment %} <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> {% endcomment %}
+                <button type="button" class="btn btn-primary btn-block" id="reply_button">Reply</button>
+            </div>
+            </div>
+        </div>
+        </div>
+
+  {% endblock main_content %}
+
+  {% comment %} Custom JS to Identify the Reply and Post Reply {% endcomment %}
+
+  {% block custom_js %}
+    <script>
+        $(document).ready(function(){
+            $(".reply_open_modal").click(function(){
+                // Getting Value from Table
+                var id = $(this).parents("tr").children("td:eq(0)").text(); //Getting Selected Row ID (Frist Column)
+                var name = $(this).parents("tr").children("td:eq(2)").text(); //Getting Selected Name (3rd Column)
+                
+                // Adding the Value from Table to Modal form
+                $("#reply_id").val(id);
+                $("#reply_name").text(name);
+            });
+
+            $(document).on("click", "#reply_button", function(){
+                //Disabling the Button while data is being saved in Server
+                $(this).attr("disabled", "disabled")
+                $(this).text("Sending Reply...")
+
+                //console.log("SAVE")
+                
+
+                var id=$("#reply_id").val();
+                var reply=$("#reply_message").val();
+                //console.log(student_data);
+
+                // Saving Attendance Data into Database
+
+                $.ajax({
+                    url:'{% url 'staff_feedback_message_reply' %}',
+                    type:'POST',
+                    data:{id:id, reply:reply},
+                })
+
+                
+                .done(function(response){
+                    
+                    if(response=="True")
+                    {
+                        alert("Reply Sent!")
+                    }
+                    else
+                    {
+                        alert("Failed to Send Reply!")
+                    }
+                    location.reload()
+                    
+                    //console.log(response)
+                })
+
+                .fail(function(){
+                    alert("Error in Sending Feedback Reply.")
+                })
+
+            })
+
+        })
+    </script>
+  {% endblock custom_js %}

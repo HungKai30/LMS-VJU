@@ -1,0 +1,293 @@
+{% extends 'staff_template/base_template.html' %}
+
+{% block page_title %}
+    Take Attendance
+{% endblock page_title %}
+
+{% block custom_css %}
+<style>
+  /* Dark theme with cream text */
+  .content-wrapper {
+    background-color: #2D2D2D !important;
+    color: #F5F5DC !important;
+  }
+  
+  .card {
+    background-color: #383838 !important;
+    border: 1px solid #444;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  }
+  
+  .card-primary .card-header, 
+  .card-success .card-header {
+    background-color: #212529 !important;
+    border-bottom: 1px solid #444;
+  }
+  
+  .card-title {
+    color: #F5F5DC !important;
+    font-weight: 600;
+  }
+  
+  /* Form styling */
+  .form-control {
+    background-color: #454545;
+    border: 1px solid #555;
+    color: #F5F5DC !important;
+  }
+  
+  .form-control:focus {
+    background-color: #505050;
+    border-color: #666;
+    box-shadow: 0 0 0 0.2rem rgba(130, 138, 145, 0.25);
+  }
+  
+  select.form-control option {
+    background-color: #454545;
+    color: #F5F5DC;
+  }
+  
+  label {
+    color: #F5F5DC !important;
+    font-weight: 500;
+  }
+  
+  /* Checkbox styling */
+  .form-check-label {
+    color: #F5F5DC !important;
+    margin-left: 5px;
+  }
+  
+  input[type="checkbox"] {
+    accent-color: #375a7f;
+  }
+  
+  /* Button styling */
+  .btn-primary {
+    background-color: #375a7f !important;
+    border-color: #375a7f !important;
+  }
+  
+  .btn-primary:hover {
+    background-color: #2b4764 !important;
+    border-color: #2b4764 !important;
+  }
+  
+  .btn-success {
+    background-color: #00bc8c !important;
+    border-color: #00bc8c !important;
+  }
+  
+  .btn-success:hover {
+    background-color: #009670 !important;
+    border-color: #009670 !important;
+  }
+  
+  /* Alert styling */
+  .alert-success {
+    background-color: rgba(40, 167, 69, 0.8) !important;
+    border-color: rgba(40, 167, 69, 0.9) !important;
+  }
+  
+  .alert-danger {
+    background-color: rgba(220, 53, 69, 0.8) !important;
+    border-color: rgba(220, 53, 69, 0.9) !important;
+  }
+  
+  /* Dynamically added content styling */
+  #student_data {
+    background-color: #383838 !important;
+    color: #F5F5DC !important;
+    padding: 20px;
+  }
+  
+  /* Add some spacing */
+  .row {
+    margin-bottom: 25px;
+  }
+</style>
+{% endblock custom_css %}
+
+{% block main_content %}
+
+<section class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Take Attendance</h3>
+                    </div>
+                    <!-- /.card-header -->
+
+                                {% comment %} Display Messages {% endcomment %}
+                                {% if messages %}
+                                <div class="form-group">
+                                <div class="col-12">
+                                    {% for message in messages %}
+                                    {% if message.tags == "error" %}
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                    {% elif message.tags == "success" %}
+                                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                                </div>
+                                {% endif %}
+                            
+
+                        <div class="card-body">
+                           
+                            <div class="form-group">
+                                <label>Subject </label>
+                                <select class="form-control" name="subject" id="subject">
+                                    {% for subject in subjects %}
+                                        <option value="{{ subject.id }}">{{ subject.subject_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Session Year </label>
+                                <select class="form-control" name="session_year" id="session_year">
+                                    {% for session_year in session_years %}
+                                        <option value="{{ session_year.id }}">{{ session_year.session_start_year }} to {{ session_year.session_end_year }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+
+                        </div>
+                        <!-- /.card-body -->
+
+                        <div class="card-footer">
+                        <button type="button" class="btn btn-primary" id="fetch_student">Fetch Student</button>
+                        </div>
+
+                        {% comment %} Displaying Students Here {% endcomment %}
+
+                        <div class="card-footer" id="student_data">
+                        </div> 
+
+                    </div>
+                    <!-- /.card -->
+
+                </div>
+            </div>
+
+        </div><!-- /.container-fluid -->
+      </section>
+
+  {% endblock main_content %}
+
+{% block custom_js %}
+
+<script>
+    $(document).ready(function(){
+        $("#fetch_student").click(function(){
+
+            // Displaying Students Based on Staff, Course and Session Enrolled
+
+            var subject=$("#subject").val()
+            var session_year=$("#session_year").val()
+
+            $.ajax({
+                url: "{% url 'get_students' %}",
+                type:'POST',
+                data:{subject:subject, session_year:session_year},
+            })
+
+            
+            .done(function(response){
+                var json_data=JSON.parse(response);
+                console.log(json_data)
+                //Displaying Attendance Date Input and Students Attendance
+                var div_data="<div class='form-group'><label>Attendance Date: </label> <input type='date' name='attendance_date' id='attendance_date' class='form-control' /></div>"
+                div_data+="<div class='form-group'><div class='row'>"
+
+                for(key in json_data)
+                {
+                    div_data+="<div class='col-lg-2'><div class='form-check'><input type='checkbox' checked='checked' name='student_data[]' value='"+ json_data[key]['id'] +"' />  <label class='form-check-label'>"+ json_data[key]['name']+" </label></div></div> ";
+
+                }
+                div_data+="</div></div>";
+                div_data+="<div class='form-group'>";
+                div_data+="<button id='save_attendance' class='btn btn-success' type='button'>Save Attendance Data</button>";
+                div_data+="</div>";
+                $("#student_data").html(div_data);
+
+            })
+            .fail(function(){
+                alert("Error in Fetching Students.")
+            })
+
+            // Save Attendance Data to Database
+            $(document).on("click", "#save_attendance", function(){
+                
+                //Disabling the Button while data is being saved in Server
+                $(this).attr("disabled", "disabled")
+                $(this).text("Saving Attendance Data...")
+
+                //console.log("SAVE")
+                var student_data=$("input[name='student_data[]'").map(function(){ 
+                        if($(this).is(":checked")){
+                            return {"id":$(this).val(), "status":1}; // Getting ID and Value of Students
+                        }
+                        else
+                        {
+                            return {"id":$(this).val(), "status":0}; // Getting ID and Value of Students
+                        }
+                    }).get()
+                var attendance_date=$("#attendance_date").val();
+                var subject_id=$("#subject").val();
+                var session_year_id=$("#session_year").val();
+                //console.log(attendance_date)
+                //console.log(student_data);
+                student_data = JSON.stringify(student_data)
+
+                // Saving Attendance Data into Database
+
+                $.ajax({
+                    url: "{% url 'save_attendance_data' %}",
+                    type:'POST',
+                    data:{student_ids:student_data, attendance_date:attendance_date, subject_id:subject_id, session_year_id:session_year_id},
+                })
+
+                
+                .done(function(response){
+                    
+                    if(response=="OK")
+                    {
+                        alert("Attendance Saved!")
+                    }
+                    else
+                    {
+                        alert("Failed to Save Attendance!")
+                    }
+                    location.reload()
+                    
+                    //console.log(response)
+                })
+
+                .fail(function(){
+                    alert("Error in Saving Students Attendance Data.")
+                })
+
+            })
+
+        })
+    })
+</script>
+{% endblock custom_js %}

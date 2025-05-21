@@ -1,0 +1,154 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block page_title %}
+    Leave Apply by Staffs
+{% endblock page_title %}
+
+{% block custom_css %}
+<style>
+  /* Dark theme with white text */
+  .content-wrapper {
+    background-color: #2D2D2D !important;
+    color: #FFFFFF !important;
+  }
+  
+  .card {
+    background-color: #383838 !important;
+    border: 1px solid #444;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  }
+  
+  .card-primary .card-header {
+    background-color: #212529 !important;
+    border-bottom: 1px solid #444;
+  }
+  
+  .card-title {
+    color: #FFFFFF !important;
+    font-weight: 600;
+  }
+  
+  /* Table styling */
+  .table {
+    color: #FFFFFF !important;
+  }
+  
+  .table thead th {
+    border-bottom: 2px solid #444;
+    background-color: #333333;
+  }
+  
+  .table td, .table th {
+    border-color: #444;
+  }
+  
+  /* Button styling */
+  .btn-success {
+    background-color: #00bc8c !important;
+    border-color: #00bc8c !important;
+  }
+  
+  .btn-success:hover {
+    background-color: #009670 !important;
+    border-color: #009670 !important;
+  }
+  
+  .btn-danger {
+    background-color: #e74c3c !important;
+    border-color: #e74c3c !important;
+  }
+  
+  .btn-danger:hover {
+    background-color: #d62c1a !important;
+    border-color: #d62c1a !important;
+  }
+  
+  .btn-warning {
+    background-color: #f39c12 !important;
+    border-color: #f39c12 !important;
+    color: #FFFFFF !important;
+  }
+  
+  .btn-warning:hover {
+    background-color: #d08410 !important;
+    border-color: #d08410 !important;
+  }
+  
+  /* Disabled button styling */
+  .btn:disabled {
+    opacity: 0.65;
+  }
+</style>
+{% endblock custom_css %}
+{% block main_content %}
+<section class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Leave Apply by Staffs</h3>
+                        </div>
+                        <!-- /.card-header -->
+
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Staff ID</th>
+                                    <th>Staff Name</th>
+                                    <th>Leave Date</th>
+                                    <th>Leave Message</th>
+                                    <th>Applied On</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+
+                                {% for leave in leaves %}
+                                <tbody>
+                                <tr>
+                                    <td>{{ leave.id }}</td>
+                                    <td>{{ leave.staff_id.admin.id }}</td>
+                                    <td>{{ leave.staff_id.admin.first_name }} {{ feedback.staff_id.admin.last_name }}</td> 
+                                    <td>{{ leave.leave_date }}</td>
+                                    <td>{{ leave.leave_message }}</td>
+                                    <td>{{ leave.created_at }}</td>
+                                    <td>
+                                        {% if leave.leave_status == 0 %}
+                                            <a href="{% url 'staff_leave_approve' leave_id=leave.id %}" class="btn btn-success">Approve</a>
+                                            <a href="{% url 'staff_leave_reject' leave_id=leave.id %}" class="btn btn-danger">Reject</a>
+                                        {% elif leave.leave_status == 1 %}
+                                            <button class="btn btn-warning" disabled="disabled">Approved</button>
+                                        {% else %}
+                                            <button class="btn btn-danger" disabled="disabled">Rejected</button>
+                                        {% endif %}
+                                        
+                                    </td>
+                                </tr>
+                                </tbody>
+                                {% endfor %}
+
+                            </table>
+                        </div>
+                    
+                    </div>
+                    <!-- /.card -->
+
+                </div>
+            </div>
+
+        </div><!-- /.container-fluid -->
+      </section>
+
+
+
+  {% endblock main_content %}
+
+  {% comment %} Custom JS to Identify the Reply and Post Reply {% endcomment %}
+
+  {% block custom_js %}
+
+  {% endblock custom_js %}
