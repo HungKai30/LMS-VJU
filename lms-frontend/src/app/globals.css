@@ -1,7 +1,7 @@
 @import url("https://fonts.cdnfonts.com/css/instrument-sans");
 @import "tailwindcss";
 @plugin "daisyui" {
-  themes: business --default;
+  themes: black --default;
 }
 @font-face {
   font-family: "Instrument Sans";

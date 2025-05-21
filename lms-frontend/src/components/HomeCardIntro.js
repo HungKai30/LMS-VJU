@@ -8,12 +8,10 @@ export const HomeCardIntro = () => {
                     <h1 className="text-5xl font-bold">Empower Learning</h1>
                     <h1 className="text-5xl font-bold">with Innovation and</h1>
                     <h1 className="text-5xl font-bold">Simplicity</h1>
-                    <p className="py-6">
-                        <p className="py-6">
-                            <span className="text-2xl font-bold">What is USPACE</span>
-                            <br />
-                            USPACE is a platform that connects students and teachers, providing a space for learning and collaboration. It offers a variety of features to enhance the learning experience, including online courses, study materials, and interactive tools.
-                        </p>
+                    <p className="py-6 my-4">
+                        <span className="text-2xl font-bold">What is USPACE</span>
+                        <br />
+                        USPACE is a platform that connects students and teachers, providing a space for learning and collaboration. It offers a variety of features to enhance the learning experience, including online courses, study materials, and interactive tools.
                     </p>
                     <button className="btn btn-primary">Get Started</button>
                 </div>

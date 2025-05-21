@@ -33,7 +33,6 @@ export const StaffAdd = () => {
 
             <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* First Name */}
                     <div className="form-control">
                         <label className="label">
                             <span className="label-text">First Name</span>
@@ -47,8 +46,6 @@ export const StaffAdd = () => {
                             required
                         />
                     </div>
-
-                    {/* Last Name */}
                     <div className="form-control">
                         <label className="label">
                             <span className="label-text">Last Name</span>
@@ -62,8 +59,6 @@ export const StaffAdd = () => {
                             required
                         />
                     </div>
-
-                    {/* Username */}
                     <div className="form-control">
                         <label className="label">
                             <span className="label-text">Username</span>
@@ -77,8 +72,6 @@ export const StaffAdd = () => {
                             required
                         />
                     </div>
-
-                    {/* Email */}
                     <div className="form-control">
                         <label className="label">
                             <span className="label-text">Email</span>
@@ -92,8 +85,6 @@ export const StaffAdd = () => {
                             required
                         />
                     </div>
-
-                    {/* Address - full width */}
                     <div className="form-control md:col-span-2">
                         <label className="label">
                             <span className="label-text">Address</span>
@@ -107,8 +98,6 @@ export const StaffAdd = () => {
                             required
                         />
                     </div>
-
-                    {/* Password */}
                     <div className="form-control">
                         <label className="label">
                             <span className="label-text">Password</span>
@@ -122,8 +111,6 @@ export const StaffAdd = () => {
                             required
                         />
                     </div>
-
-                    {/* Confirm Password */}
                     <div className="form-control">
                         <label className="label">
                             <span className="label-text">Confirm Password</span>

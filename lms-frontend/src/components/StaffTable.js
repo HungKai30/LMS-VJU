@@ -30,7 +30,7 @@ const StaffTable = () => {
                         <td>None</td>
                         <td>06/01/2025</td>
                         <td>
-                            <button className='btn btn-primary bg-lime-300 text-accent-content mx-2'>Edit</button>
+                            <button className='btn btn-primary bg-accent text-accent-content mx-2'>Edit</button>
                             <button className='btn btn-primary bg-accent text-accent-content mx-2'>Delete</button>
                         </td>
                     </tr>
