@@ -1,11 +1,6 @@
-# Django Student Management System (beta)
+# Django Student Management System Website
 This is a Simple Student Management System Developed for Educational Purpose using Python (Django).
-Feel free to make changes based on your requirements.
-
-[Project Demo on YouTube](https://www.youtube.com/watch?v=kArCR96m7uo "Django Student Management System Demo")
-
-I've created this project while learnging Django and followed tutorial series from **SuperCoders**
-
+We're building this project as part of final exam
 And if you like this project then ADD a STAR ⭐️  to this project 👆
 
 ## Features of this Project
