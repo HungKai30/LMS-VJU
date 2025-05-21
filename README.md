@@ -31,6 +31,7 @@ And if you like this project then ADD a STAR ⭐️  to this project 👆
 5. Send Feedback to HOD
 
 ## Project Hierachy
+'''
 django-student-management-system/
 ├── core/
 │ ├── migrations/ # Các file migration database của app core
@@ -60,6 +61,7 @@ django-student-management-system/
 ├── db.sqlite3 # Database SQLite (file dữ liệu)
 ├── requirements.txt # Thư viện cần thiết để chạy dự án
 └── README.md # File mô tả dự án
+'''
 ## How to Install and Run this project?
 
 ### Pre-Requisites:
