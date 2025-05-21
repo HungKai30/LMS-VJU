@@ -30,6 +30,34 @@ And if you like this project then ADD a STAR ⭐️  to this project 👆
 4. Apply for Leave
 5. Send Feedback to HOD
 
+## Project Hierachy
+django-student-management-system/
+├── core/
+│   ├── migrations/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+├── media/
+│   └── (thư mục lưu trữ file upload)
+├── student_management_system/
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── templates/
+│   ├── admin_template/
+│   ├── staff_template/
+│   ├── student_template/
+│   └── base.html
+├── manage.py
+├── db.sqlite3
+├── requirements.txt
+└── README.md
 
 ## How to Install and Run this project?
 
