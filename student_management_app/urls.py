@@ -7,7 +7,6 @@ from .import HodViews, StaffViews, StudentViews
 urlpatterns = [
     path('', views.loginPage, name="login"),
     # path('accounts/', include('django.contrib.auth.urls')),
-    path('home/', views.home, name='home'),
     path('doLogin/', views.doLogin, name="doLogin"),
     path('get_user_details/', views.get_user_details, name="get_user_details"),
     path('logout_user/', views.logout_user, name="logout_user"),
@@ -91,4 +90,8 @@ urlpatterns = [
     path('student_profile/', StudentViews.student_profile, name="student_profile"),
     path('student_profile_update/', StudentViews.student_profile_update, name="student_profile_update"),
     path('student_view_result/', StudentViews.student_view_result, name="student_view_result"),
+    path('student/todo/', StudentViews.student_todo_list, name="student_todo_list"),
+    path('student/todo/mark_complete/<int:todo_id>/', StudentViews.student_todo_mark_complete, name="student_todo_mark_complete"),
+    path('student/todo/delete/<int:todo_id>/', StudentViews.student_todo_delete, name="student_todo_delete"),
+    path('student/todo/edit/<int:todo_id>/', StudentViews.student_todo_edit, name="student_todo_edit"), # URL MỚI
 ]
