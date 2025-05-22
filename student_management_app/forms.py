@@ -1,11 +1,26 @@
 from django import forms 
 from django.forms import Form
 from student_management_app.models import Courses, SessionYearModel
-
+from .models import TodoItem # Thêm import này
 
 class DateInput(forms.DateInput):
     input_type = "date"
 
+class TodoItemForm(forms.ModelForm):
+    # Định dạng lại widget cho due_date nếu muốn sử dụng DateInput tùy chỉnh
+    due_date = forms.DateField(label="Expiration Date (Optional)", required=False, widget=DateInput(attrs={"class":"form-control"}))
+
+    class Meta:
+        model = TodoItem
+        fields = ['title', 'description', 'due_date'] # Các trường sinh viên có thể nhập
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Type title task here'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Type description here (if any)'}),
+        }
+        labels = {
+            'title': 'Task Title',
+            'description': 'Detailed Description',
+        }
 
 class AddStudentForm(forms.Form):
     email = forms.EmailField(label="Email", max_length=50, widget=forms.EmailInput(attrs={"class":"form-control"}))
