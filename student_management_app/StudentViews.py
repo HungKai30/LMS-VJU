@@ -6,7 +6,9 @@ from django.urls import reverse
 import datetime # To Parse input DateTime into Python Date Time Object
 
 from student_management_app.models import CustomUser, Staffs, Courses, Subjects, Students, Attendance, AttendanceReport, LeaveReportStudent, FeedBackStudent, StudentResult
-
+from .models import Students, TodoItem # Thêm TodoItem vào import
+from .forms import TodoItemForm # Import form vừa tạo
+from django.shortcuts import get_object_or_404 # Để lấy đối tượng hoặc báo lỗi 404
 
 def student_home(request):
     student_obj = Students.objects.get(admin=request.user.id)
@@ -194,7 +196,94 @@ def student_view_result(request):
     }
     return render(request, "student_template/student_view_result.html", context)
 
+def student_todo_list(request):
+    try:
+        student_profile = Students.objects.get(admin=request.user.id)
+    except Students.DoesNotExist:
+        messages.error(request, "Không tìm thấy thông tin sinh viên.")
+        return redirect('student_home') # Hoặc một trang lỗi phù hợp
+
+    if request.method == "POST":
+        form = TodoItemForm(request.POST)
+        if form.is_valid():
+            todo_item = form.save(commit=False) # Chưa lưu vào CSDL vội
+            todo_item.student = student_profile # Gán sinh viên hiện tại cho công việc
+            todo_item.save() # Bây giờ mới lưu
+            messages.success(request, "Đã thêm công việc mới!")
+            return redirect('student_todo_list') # Chuyển hướng về trang to-do list
+        else:
+            messages.error(request, "Vui lòng kiểm tra lại thông tin nhập.")
+    else:
+        form = TodoItemForm() # Form trống cho GET request
+
+    todo_items = TodoItem.objects.filter(student=student_profile) # Lấy tất cả công việc của sinh viên này
+    
+    context = {
+        "todo_items": todo_items,
+        "form": form,
+        "page_title": "Danh sách Công việc" 
+    }
+    return render(request, "student_template/student_todo_list.html", context)
 
 
+def student_todo_mark_complete(request, todo_id):
+    try:
+        student_profile = Students.objects.get(admin=request.user.id)
+        todo_item = get_object_or_404(TodoItem, id=todo_id, student=student_profile) # Đảm bảo công việc thuộc về sinh viên này
+    except Students.DoesNotExist:
+        messages.error(request, "Không tìm thấy thông tin sinh viên.")
+        return redirect('student_home')
+    
+    todo_item.is_completed = not todo_item.is_completed # Đảo ngược trạng thái hoàn thành
+    todo_item.save()
+    
+    if todo_item.is_completed:
+        messages.success(request, f"Công việc '{todo_item.title}' đã được đánh dấu hoàn thành.")
+    else:
+        messages.info(request, f"Công việc '{todo_item.title}' đã được đánh dấu chưa hoàn thành.")
+        
+    return redirect('student_todo_list')
+
+
+def student_todo_delete(request, todo_id):
+    try:
+        student_profile = Students.objects.get(admin=request.user.id)
+        todo_item = get_object_or_404(TodoItem, id=todo_id, student=student_profile) # Đảm bảo công việc thuộc về sinh viên này
+    except Students.DoesNotExist:
+        messages.error(request, "Không tìm thấy thông tin sinh viên.")
+        return redirect('student_home')
+        
+    item_title = todo_item.title
+    todo_item.delete()
+    messages.success(request, f"Đã xóa công việc '{item_title}'.")
+    return redirect('student_todo_list')
+
+def student_todo_edit(request, todo_id):
+    try:
+        student_profile = Students.objects.get(admin=request.user.id)
+        # Lấy công việc cần sửa, đảm bảo nó thuộc về sinh viên đang đăng nhập
+        todo_item = get_object_or_404(TodoItem, id=todo_id, student=student_profile)
+    except Students.DoesNotExist:
+        messages.error(request, "Không tìm thấy thông tin sinh viên.")
+        return redirect('student_home') # Hoặc một trang lỗi phù hợp
+    
+    if request.method == "POST":
+        form = TodoItemForm(request.POST, instance=todo_item) # Truyền instance để form biết là đang sửa
+        if form.is_valid():
+            form.save() # Lưu các thay đổi vào đối tượng todo_item hiện có
+            messages.success(request, f"Đã cập nhật công việc '{todo_item.title}'!")
+            return redirect('student_todo_list') # Chuyển hướng về trang to-do list
+        else:
+            messages.error(request, "Vui lòng kiểm tra lại thông tin nhập.")
+    else:
+        # Khi GET request, hiển thị form với dữ liệu hiện tại của công việc
+        form = TodoItemForm(instance=todo_item) 
+    
+    context = {
+        "form": form,
+        "todo_item": todo_item, # Truyền todo_item để có thể hiển thị tiêu đề hoặc ID nếu cần
+        "page_title": f"Modify: {todo_item.title}"
+    }
+    return render(request, "student_template/student_todo_edit.html", context)
 
 
