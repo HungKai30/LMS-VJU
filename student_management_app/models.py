@@ -166,6 +166,24 @@ class StudentResult(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
+    
+class TodoItem(models.Model):
+    id = models.AutoField(primary_key=True)
+    student = models.ForeignKey(Students, on_delete=models.CASCADE, related_name="todo_items") # Liên kết với model Students
+    title = models.CharField(max_length=255) # Tiêu đề công việc
+    description = models.TextField(blank=True, null=True) # Mô tả chi tiết, có thể để trống
+    is_completed = models.BooleanField(default=False) # Trạng thái hoàn thành, mặc định là chưa hoàn thành
+    due_date = models.DateField(blank=True, null=True) # Ngày hết hạn, có thể để trống
+    created_at = models.DateTimeField(auto_now_add=True) # Ngày tạo
+    updated_at = models.DateTimeField(auto_now=True) # Ngày cập nhật cuối
+
+    objects = models.Manager()
+
+    def __str__(self):
+        return f"{self.title} (Student: {self.student.admin.username})"
+
+    class Meta:
+        ordering = ['is_completed', '-created_at'] # Sắp xếp theo trạng thái và ngày tạo
 
 
 #Creating Django Signals
@@ -183,7 +201,7 @@ def create_user_profile(sender, instance, created, **kwargs):
         if instance.user_type == 2:
             Staffs.objects.create(admin=instance)
         if instance.user_type == 3:
-            Students.objects.create(admin=instance, course_id=Courses.objects.get(id=1), session_year_id=SessionYearModel.objects.get(id=1), address="", profile_pic="", gender="")
+            Students.objects.create(admin=instance, course_id=Courses.objects.get(id=2), session_year_id=SessionYearModel.objects.get(id=1), address="", profile_pic="", gender="")
     
 
 @receiver(post_save, sender=CustomUser)
