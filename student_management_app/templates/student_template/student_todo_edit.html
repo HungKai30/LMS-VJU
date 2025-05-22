@@ -1,0 +1,45 @@
+{% extends 'student_template/base_template.html' %}
+{% load static %}
+
+{% block page_title %}
+    {{ page_title|default:"Dedit Task" }}
+{% endblock page_title %}
+
+{% block main_content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-warning"> {# Thay đổi màu card nếu muốn #}
+                    <div class="card-header">
+                        <h3 class="card-title">Edit: {{ todo_item.title }}</h3>
+                    </div>
+                    <form method="POST" action="{% url 'student_todo_edit' todo_id=todo_item.id %}"> {# Action trỏ đến URL edit với todo_id #}
+                        {% csrf_token %}
+                        <div class="card-body">
+                            {% if messages %}
+                                {% for message in messages %}
+                                    {% if message.tags == "error" or message.tags == "success" %}
+                                    <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+
+                            {{ form.as_p }} {# Render form với dữ liệu đã có #}
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-warning">Update Task</button>
+                            <a href="{% url 'student_todo_list' %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock main_content %}

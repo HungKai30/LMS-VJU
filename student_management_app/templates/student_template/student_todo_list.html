@@ -1,0 +1,107 @@
+{% extends 'student_template/base_template.html' %}
+{% load static %}
+
+{% block page_title %}
+    {{ page_title|default:"My To-Do List" }}
+{% endblock page_title %}
+
+{% block custom_css %}
+<style>
+    .completed-task {
+        text-decoration: line-through;
+        color: #888;
+    }
+    .todo-actions a, .todo-actions button {
+        margin-left: 5px;
+    }
+    .due-date-past {
+        color: red;
+        font-weight: bold;
+    }
+</style>
+{% endblock custom_css %}
+
+{% block main_content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Add New Task</h3>
+                    </div>
+                    <form method="POST" action="{% url 'student_todo_list' %}">
+                        {% csrf_token %}
+                        <div class="card-body">
+                            {% if messages %}
+                                {% for message in messages %}
+                                    {% if message.tags == "error" or message.tags == "success" or message.tags == "info" %}
+                                    <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+
+                            {{ form.as_p }} {# Render form một cách đơn giản #}
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Add Task</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card card-info mt-4">
+                    <div class="card-header">
+                        <h3 class="card-title">To-Do List</h3>
+                    </div>
+                    <div class="card-body table-responsive p-0">
+                        {% if todo_items %}
+                        <table class="table table-hover text-nowrap">
+                                <thead>
+                                    <tr>
+                                        <th>Status</th>
+                                        <th>Title</th>
+                                        <th>Description</th>
+                                        <th>Due Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in todo_items %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url 'student_todo_mark_complete' item.id %}" class="btn btn-sm {% if item.is_completed %}btn-secondary{% else %}btn-outline-success{% endif %}">
+                                                {% if item.is_completed %}
+                                                    <i class="fas fa-undo"></i> Not Completed
+                                                {% else %}
+                                                    <i class="fas fa-check"></i> Completed
+                                                {% endif %}
+                                            </a>
+                                        </td>
+                                        <td {% if item.is_completed %}class="completed-task"{% endif %}>{{ item.title }}</td>
+                                        <td {% if item.is_completed %}class="completed-task"{% endif %}>{{ item.description|default_if_none:""|truncatewords:10 }}</td>
+                                        <td {% if item.due_date and item.due_date < today %}class="due-date-past"{% endif %}>
+                                            {{ item.due_date|date:"d/m/Y"|default_if_none:"-" }}
+                                        </td>
+                                        <td class="todo-actions">
+                                            <a href="{% url 'student_todo_edit' item.id %}" class="btn btn-sm btn-info"><i class="fas fa-edit"></i> Edit</a>
+                                            <a href="{% url 'student_todo_delete' item.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this task?')"><i class="fas fa-trash"></i> Delete</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                        <p class="p-3">You have no tasks. Please add a new task!</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock main_content %}
